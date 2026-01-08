@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import axios from "axios";
 import { URL } from "../globalConstant";
 import loadingAnimation from '../assets/auth-loading.json'
+import Lottie from "lottie-react";
 
 export default function OAuthCallback() {
   const calledRef = useRef(false);
