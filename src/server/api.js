@@ -2,8 +2,6 @@ import axios from "axios";
 import { getAuth } from "../auth/auth";
 import { URL } from "../globalConstant";
 
-// const URL = "http://localhost:4000";
-
 
 export const fetchValidationRules = async () => {
   const auth = getAuth();

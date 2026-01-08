@@ -1,19 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
 import { URL } from "../globalConstant";
-// url =  https://sf-validation-backend-production.up.railway.app
+import loadingAnimation from '../assets/auth-loading.json'
+
 export default function OAuthCallback() {
+  const calledRef = useRef(false);
+
   useEffect(() => {
+    if (calledRef.current) return;
+    calledRef.current = true;
+
     const rawCode = new URLSearchParams(window.location.search).get("code");
     if (!rawCode) return;
 
     const decodedCode = decodeURIComponent(rawCode);
-// and this code = aPrxpGCnFcxE7rlTWfk_CjQe8ai2A9g749caKYDuOUAt.y0YQLCj4DI4pqT.VFZJTOnobylXBA==
 
     axios
-      .post(`${URL}/oauth/token`, {
-        code: decodedCode, 
-      })
+      .post(`${URL}/oauth/token`, { code: decodedCode })
       .then((res) => {
         localStorage.setItem("sfAuth", JSON.stringify(res.data));
         window.location.replace("/dashboard");
@@ -24,5 +27,14 @@ export default function OAuthCallback() {
       });
   }, []);
 
-  return <p>Logging in...</p>;
+  return <div className="flex h-screen w-full flex-col items-center justify-center bg-white">
+      <Lottie
+        animationData={loadingAnimation}
+        loop
+        className="h-56 w-56"
+      />
+      <p className="mt-4 text-sm font-medium text-gray-600">
+        Authenticating with Salesforce…
+      </p>
+    </div>;
 }
