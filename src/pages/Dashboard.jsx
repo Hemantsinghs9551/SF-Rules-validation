@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import RuleCard from "../components/Rulecard";
 import { fetchValidationRules, toggleValidationRule } from "../server/api";
 import axios from "axios";
+import { URL } from "../globalConstant";
 
 export default function Dashboard() {
   const [rules, setRules] = useState([]);
@@ -15,7 +16,7 @@ export default function Dashboard() {
     const fetchUser = async () => {
       const auth = JSON.parse(localStorage.getItem("sfAuth"));
 
-      const res = await axios.get("http://localhost:4000/sf/userinfo", {
+      const res = await axios.get(`${URL}/sf/userinfo`, {
         headers: {
           access_token: auth.access_token,
           instance_url: auth.instance_url,
