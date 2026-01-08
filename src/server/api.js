@@ -1,7 +1,9 @@
 import axios from "axios";
 import { getAuth } from "../auth/auth";
+import { URL } from "../globalConstant";
 
-const API_BASE_URL = "http://localhost:4000";
+// const URL = "http://localhost:4000";
+
 
 export const fetchValidationRules = async () => {
   const auth = getAuth();
@@ -12,7 +14,7 @@ export const fetchValidationRules = async () => {
 
   try {
     const response = await axios.get(
-      `${API_BASE_URL}/validation-rules`,
+      `${URL}/validation-rules`,
       {
         headers: {
           access_token: auth.access_token,
@@ -20,8 +22,8 @@ export const fetchValidationRules = async () => {
         },
       }
     );
+    
 
-    console.log(response.data.records, "validation rules");
     return response.data.records || [];
   } catch (error) {
     throw new Error(
@@ -31,14 +33,13 @@ export const fetchValidationRules = async () => {
 };
 
 export const toggleValidationRule = async (id, active) => {
-  console.log(id, active, "sdffdsf")
   const auth = getAuth();
   if (!auth) {
     throw new Error("Not authenticated");
   }
 
   try {
-    await axios.patch(`${API_BASE_URL}/validation-rules/${id}`, {
+    await axios.patch(`${URL}/validation-rules/${id}`, {
       access_token: auth.access_token,
       instance_url: auth.instance_url,
       active,

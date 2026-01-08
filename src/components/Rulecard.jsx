@@ -1,7 +1,6 @@
 export default function RuleCard({ rule, onToggle }) {
-    const handleToggle = () => {
+  const handleToggle = () => {
     const newActive = !rule.Active;
-    console.log("Toggling rule:", rule.Id, newActive); // debug
     onToggle(newActive);
   };
   return (
@@ -11,19 +10,28 @@ export default function RuleCard({ rule, onToggle }) {
           {rule.ValidationName}
         </h4>
         <p className="text-sm text-gray-500">
-          Status: {rule.Active ? "Active" : "Inactive"}
+          Status:{" "}
+          <span
+            className={rule.Active ? "text-green-600" : "text-red-600"}
+          >
+            {rule.Active ? "Active" : "Inactive"}
+          </span>
         </p>
       </div>
 
       <button
         onClick={handleToggle}
-        className={`px-4 py-2 rounded-md text-white transition
-          ${rule.Active
-            ? "bg-red-500 hover:bg-red-600"
-            : "bg-green-500 hover:bg-green-600"}
+        role="switch"
+        aria-checked={rule.Active}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+          ${rule.Active ? "bg-green-500" : "bg-gray-300"}
         `}
       >
-        {rule.Active ? "Disable" : "Enable"}
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+            ${rule.Active ? "translate-x-6" : "translate-x-1"}
+          `}
+        />
       </button>
     </div>
   );

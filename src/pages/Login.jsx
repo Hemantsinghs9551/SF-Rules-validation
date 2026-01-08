@@ -1,19 +1,11 @@
 export default function Login() {
-//   const login = () => {
-//     window.location.href =
-//       `https://login.salesforce.com/services/oauth2/authorize` +
-//       `?response_type=code` +
-//       `&client_id=3MVG9HtWXcDGV.nHJ2joZJYNGyQ.6DvBX13VkcC9c2gHEloZ4oQEkRxXKf6b2MSLidkRihR20oa6Aw4t_qa69` +
-//       `&redirect_uri=http://localhost:3000/oauth/callback`;
-//   };
   const login = () => {
-  window.location.href =
-    `https://login.salesforce.com/services/oauth2/authorize
+    window.location.href = `https://login.salesforce.com/services/oauth2/authorize
 ?response_type=code
 &client_id=3MVG9HtWXcDGV.nHJ2joZJYNGyQ.6DvBX13VkcC9c2gHEloZ4oQEkRxXKf6b2MSLidkRihR20oa6Aw4t_qa69
-&redirect_uri=http://localhost:5173/oauth/callback
+&redirect_uri=https://sf-validation-rule.netlify.app/oauth/callback
 &prompt=login`;
-};
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -23,7 +15,8 @@ export default function Login() {
         </h2>
 
         <p className="text-gray-600 mb-6">
-          Login with your Salesforce Developer Org to manage Account validation rules.
+          Login with your Salesforce Developer Org to manage Account validation
+          rules.
         </p>
 
         <button

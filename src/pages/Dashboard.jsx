@@ -2,70 +2,149 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import Header from "../components/Header";
 import RuleCard from "../components/Rulecard";
-import axios from "axios";
-import { getAuth } from "../auth/auth";
 import { fetchValidationRules, toggleValidationRule } from "../server/api";
+import axios from "axios";
 
 export default function Dashboard() {
+  const [rules, setRules] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [deploying, setDeploying] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const auth = JSON.parse(localStorage.getItem("sfAuth"));
+
+      const res = await axios.get("http://localhost:4000/sf/userinfo", {
+        headers: {
+          access_token: auth.access_token,
+          instance_url: auth.instance_url,
+        },
+      });
+      setData(res.data);
+    };
+
+    fetchUser();
+  }, []);
   useEffect(() => {
     const loadRules = async () => {
-      try {
-        const result = await fetchValidationRules();
-        setData(result);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching validation rules:", error);
-      }
+      const result = await fetchValidationRules();
+
+      const normalized = result.map((r) => ({
+        ...r,
+        Active: r.Active === true || r.Active === "true",
+      }));
+
+      setRules(normalized);
+      setLoading(false);
     };
 
     loadRules();
   }, []);
+  const toggleRuleLocal = (ruleId, newActive) => {
+    setRules((prev) =>
+      prev.map((rule) =>
+        rule.Id === ruleId ? { ...rule, Active: newActive, dirty: true } : rule
+      )
+    );
+  };
 
-  const auth = getAuth();
+  const deployChanges = async () => {
+    const changedRules = rules.filter((r) => r.dirty);
+    if (!changedRules.length) return alert("No changes to deploy");
 
-  // const toggleRule = (rule) => {
-  //   // Original backend PATCH call (commented):
-  //   axios.patch(`http://localhost:4000/validation-rules/${rule.Id}`, {
-  //     access_token: auth.access_token,
-  //     instance_url: auth.instance_url,
-  //     active: !rule.Active,
-  //     ruleName: rule.ValidationName,
-  //   }).then(() => {
-  //     setRules(prev =>
-  //       prev.map(r =>
-  //         r.Id === rule.Id ? { ...r, Active: !r.Active } : r
-  //       )
-  //     );
-  //   });
+    try {
+      setDeploying(true);
+      for (const rule of changedRules) {
+        await toggleValidationRule(rule.Id, rule.Active);
+      }
+      setRules((prev) => prev.map((r) => ({ ...r, dirty: false })));
+      alert("Deployed successfully");
+    } catch (err) {
+      console.error(err);
+      alert("Deployment failed");
+    } finally {
+      setDeploying(false);
+    }
+  };
+  const enableAllRules = () => {
+    setRules((prev) =>
+      prev.map((r) =>
+        r.Active === true ? r : { ...r, Active: true, dirty: true }
+      )
+    );
+  };
 
-  //   // Frontend-only toggle using local state:
-  //   setRules((prev) =>
-  //     prev.map((r) =>
-  //       r.Id === rule.Id ? { ...r, Active: !r.Active } : r
-  //     )
-  //   );
-  // };
+  const disableAllRules = () => {
+    setRules((prev) =>
+      prev.map((rule) =>
+        !rule.Active ? rule : { ...rule, Active: false, dirty: true }
+      )
+    );
+  };
+  const allEnabled = rules.length > 0 && rules.every((r) => r.Active === true);
+
+  const allDisabled =
+    rules.length > 0 && rules.every((r) => r.Active === false);
 
   return (
     <Layout>
-      {/* <Header user={user} /> */}
+      <Header user={data}/>
 
       <h3 className="text-xl font-semibold mb-4">Account Validation Rules</h3>
 
       {loading ? (
         <p className="text-gray-500">Loading rules...</p>
       ) : (
-        <div className="grid gap-4">
-          {data?.map((rule) => (
-            <RuleCard
-              key={rule.Id}
-              rule={rule}
-              onToggle={(newActive) => toggleValidationRule(rule.Id, newActive)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 mb-6">
+            {rules.map((rule) => (
+              <RuleCard
+                key={rule.Id}
+                rule={rule}
+                onToggle={(newActive) => toggleRuleLocal(rule.Id, newActive)}
+              />
+            ))}
+          </div>
+
+          <div className="flex gap-3 mb-4">
+            <button
+              onClick={enableAllRules}
+              disabled={allEnabled}
+              className={`px-4 py-2 rounded text-white
+                  ${
+                    allEnabled
+                      ? "bg-green-300 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-700"
+                  }
+                `}
+            >
+              Enable All
+            </button>
+
+            <button
+              onClick={disableAllRules}
+              disabled={allDisabled}
+              className={`px-4 py-2 rounded text-white
+                ${
+                  allDisabled
+                    ? "bg-red-300 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700"
+                }
+              `}
+            >
+              Disable All
+            </button>
+
+            <button
+              onClick={deployChanges}
+              disabled={deploying}
+              className="ml-auto bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            >
+              {deploying ? "Deploying..." : "Deploy to Salesforce"}
+            </button>
+          </div>
+        </>
       )}
     </Layout>
   );

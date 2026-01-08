@@ -8,7 +8,7 @@ export default function Header({ user }) {
           Salesforce Validation Rule Manager
         </h1>
         <p className="text-sm text-gray-500">
-          {user?.organization_name} • {user?.preferred_username}
+          {user?.name} • {user?.email}
         </p>
       </div>
 
