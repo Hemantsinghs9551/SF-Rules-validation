@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import Header from "../components/Header";
 import RuleCard from "../components/Rulecard";
-import { fetchValidationRules, toggleValidationRule } from "../server/api";
+import {
+  fetchOrganizationInfo,
+  fetchValidationRules,
+  toggleValidationRule,
+} from "../server/api";
 import axios from "axios";
 import { URL } from "../globalConstant";
 import Lottie from "lottie-react";
@@ -29,18 +33,24 @@ export default function Dashboard() {
   const [deploying, setDeploying] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const loadAllUserData = async () => {
       try {
         const auth = JSON.parse(localStorage.getItem("sfAuth"));
 
-        const res = await axios.get(`${URL}/sf/userinfo`, {
-          headers: {
-            access_token: auth.access_token,
-            instance_url: auth.instance_url,
-          },
-        });
+        const [userRes, orgRes] = await Promise.all([
+          axios.get(`${URL}/sf/userinfo`, {
+            headers: {
+              access_token: auth.access_token,
+              instance_url: auth.instance_url,
+            },
+          }),
+          fetchOrganizationInfo(),
+        ]);
 
-        setData(res.data);
+        setData({
+          ...userRes.data,
+          organization: orgRes,
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -48,7 +58,7 @@ export default function Dashboard() {
       }
     };
 
-    fetchUser();
+    loadAllUserData();
   }, []);
 
   useEffect(() => {

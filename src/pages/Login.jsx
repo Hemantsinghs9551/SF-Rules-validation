@@ -1,9 +1,11 @@
+const clientId = import.meta.env.VITE_SF_CLIENT_ID;
+const redirectUri = import.meta.env.VITE_SF_REDIRECT_URI;
 export default function Login() {
   const login = () => {
     window.location.href = `https://login.salesforce.com/services/oauth2/authorize
 ?response_type=code
-&client_id=3MVG9HtWXcDGV.nHJ2joZJYNGyQ.6DvBX13VkcC9c2gHEloZ4oQEkRxXKf6b2MSLidkRihR20oa6Aw4t_qa69
-&redirect_uri=https://sf-validation-rule.netlify.app/oauth/callback
+&client_id=${clientId}
+&redirect_uri=${redirectUri}
 &prompt=login`;
   };
 

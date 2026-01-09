@@ -8,7 +8,7 @@ export default function Header({ user }) {
           Salesforce Validation Rule Manager
         </h1>
         <p className="text-sm text-gray-500">
-          {user?.name} • {user?.email}
+          {user?.name} • {user?.email} • {user?.organization?.Name}
         </p>
       </div>
 
@@ -17,7 +17,7 @@ export default function Header({ user }) {
           logout();
           window.location.replace("/");
         }}
-        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+        className="px-4 py-2 bg-red-500 text-white rounded-md border-red-500 hover:bg-red-600 transition"
       >
         Logout
       </button>
