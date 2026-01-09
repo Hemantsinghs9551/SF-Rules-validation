@@ -44,7 +44,6 @@ export const toggleValidationRule = async (id, active) => {
     });
     return true;
   } catch (error) {
-    // Extract detailed error message from Salesforce
     let errorMessage = "Failed to toggle validation rule";
     
     if (error.response?.data) {
@@ -60,5 +59,31 @@ export const toggleValidationRule = async (id, active) => {
     }
     
     throw new Error(errorMessage);
+  }
+};
+
+export const fetchOrganizationInfo = async () => {
+  const auth = getAuth();
+  if (!auth) {
+    throw new Error("Not authenticated");
+  }
+
+  try {
+    const res = await axios.get(
+      `${URL}/sf/organization`,
+      {
+        headers: {
+          access_token: auth.access_token,
+          instance_url: auth.instance_url,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.error ||
+      "Failed to fetch organization info"
+    );
   }
 };
