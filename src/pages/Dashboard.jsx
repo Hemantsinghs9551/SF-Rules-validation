@@ -160,8 +160,8 @@ export default function Dashboard() {
           ))}
         </div>
       )}
-
-      <div className="flex gap-3 mb-4">
+      {
+        rules.length !== 0  && (    <div className="flex gap-3 mb-4">
         <button
           onClick={enableAllRules}
           disabled={allEnabled}
@@ -193,7 +193,9 @@ export default function Dashboard() {
         >
           {deploying ? "Deploying..." : "Deploy to Salesforce"}
         </button>
-      </div>
+      </div>) 
+      }
+  
     </Layout>
   );
 }
