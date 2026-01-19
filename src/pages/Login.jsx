@@ -1,8 +1,8 @@
 import { SalesforceIcon } from "../assets/SalesForceIcon";
 
-
-const clientId = import.meta.env.VITE_SF_CLIENT_ID;
-const redirectUri = import.meta.env.VITE_SF_REDIRECT_URI;
+const clientId =
+  "3MVG9HtWXcDGV.nHJ2joZJYNGyQ.6DvBX13VkcC9c2gHEloZ4oQEkRxXKf6b2MSLidkRihR20oa6Aw4t_qa69";
+const redirectUri = "https://sf-validation-rule.netlify.app/oauth/callback";
 
 export default function Login() {
   const login = () => {
@@ -16,7 +16,6 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 text-center">
-        
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="h-16 w-16 rounded-2xl bg-blue-600 flex items-center justify-center shadow-md">
@@ -30,7 +29,8 @@ export default function Login() {
         </h1>
 
         <p className="text-gray-500 mb-8">
-          Connect with your Salesforce Developer Org to manage Account validation rules
+          Connect with your Salesforce Developer Org to manage Account
+          validation rules
         </p>
 
         {/* Login Button */}
