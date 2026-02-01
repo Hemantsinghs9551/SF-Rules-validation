@@ -1,7 +1,7 @@
 import { SalesforceIcon } from "../assets/SalesForceIcon";
 
 const clientId =
-  "3MVG9HtWXcDGV.nHJ2joZJYNGyQ.6DvBX13VkcC9c2gHEloZ4oQEkRxXKf6b2MSLidkRihR20oa6Aw4t_qa69";
+  "3MVG9HtWXcDGV.nHJ2joZJYNGyepCgDwaSscjHHViat9.OV8UaR35MpJeCWqSKx5eWohAi2q3IOQf.RUGHPjn";
 const redirectUri = "https://sf-validation-rule.netlify.app/oauth/callback";
 
 export default function Login() {
