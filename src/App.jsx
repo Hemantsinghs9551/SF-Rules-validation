@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import OAuthCallback from "./pages/OAuthCallback";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { isAuthenticated } from "./auth/auth";
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* Login Route */}
+        {/* Login */}
         <Route
           path="/"
           element={
@@ -20,10 +20,10 @@ function App() {
           }
         />
 
-        {/* OAuth Callback */}
-        <Route path="/oauth/callback" element={<OAuthCallback />} />
+        {/* OAuth success*/}
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
 
-        {/* Dashboard (Protected) */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -33,7 +33,6 @@ function App() {
           }
         />
 
-        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
